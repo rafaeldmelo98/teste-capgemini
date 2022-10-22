@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"teste-capgemini/models"
+	"teste-capgemini/services"
 
 	"github.com/labstack/echo/v4"
 )
@@ -18,7 +19,13 @@ func CheckSequence(c echo.Context) error {
 		})
 	}
 
-	return nil
+	matrixB := services.MapSequence("B", sequence.SequenceList)
+	matrixC := services.MapSequence("C", sequence.SequenceList)
+
+	return c.JSON(http.StatusOK, jsonObj{
+		"matrixB": matrixB,
+		"matrixC": matrixC,
+	})
 }
 
 func Stats(c echo.Context) error {
