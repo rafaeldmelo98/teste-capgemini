@@ -17,6 +17,7 @@
 * No documento não diz se as letras podem ou não se repetir, mas levando em consideração que uma sequência já foi validada, não teria motivo considerar uma nova sequencia de letras apenas por haver uma letra a mais.
    * Decisão: Caso uma sequência já tenha sido validada, considere que aquela letra não pode ser usada para outra sequência. Usar ideia do dicionário.
    * Qual o esforço? Adicionar mais uma parametro para as funções de validação OU verificar o valor antes de enviar para as funções de validação, assim, caso tal elemento já tenha sido validado, não é necessário prosseguir com a validação.
+   * Realizado: Caso retornado que uma sequencia foi validada, salvar coordenadas de acordo com o tipo de sequencia encontrada.
 
 ## TODO
 * Criar .gitignore para remover arquivo do sqlite.

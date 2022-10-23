@@ -18,28 +18,45 @@ func MapSequence(letter string, sequenceList []string) [][]bool {
 }
 
 func FindValidSequence(matrix [][]bool) int {
-	sequencesFounded := 0
+	sequencesFound := 0
+	var elementsFoundCoordinates [][]int
 	for indexRow, row := range matrix {
 		for indexColumn := range row {
-			if CheckForDiagonalSequence(matrix, indexRow, indexColumn) {
-				sequencesFounded++
+			elementvalidated := CheckIfElementAlreadyValidated(elementsFoundCoordinates, indexRow, indexColumn)
+			if elementvalidated {
+				continue
+			}
+			foundDiagonalSequence, diagonalDirection := CheckForDiagonalSequence(matrix, indexRow, indexColumn)
+			if foundDiagonalSequence {
+				elementsFoundCoordinates = append(elementsFoundCoordinates,
+					[]int{indexRow, indexColumn},
+					[]int{indexRow + 1, indexColumn + (diagonalDirection * 1)},
+					[]int{indexRow + 2, indexColumn + (diagonalDirection * 2)},
+					[]int{indexRow + 3, indexColumn + (diagonalDirection * 3)})
+				sequencesFound++
 				continue
 			}
 			if CheckForLineSequence(matrix, indexRow, indexColumn) {
-				sequencesFounded++
+				elementsFoundCoordinates = append(elementsFoundCoordinates,
+					[]int{indexRow, indexColumn}, []int{indexRow, indexColumn + 1},
+					[]int{indexRow, indexColumn + 2}, []int{indexRow, indexColumn + 3})
+				sequencesFound++
 				continue
 			}
 			if CheckForColumnSequence(matrix, indexRow, indexColumn) {
-				sequencesFounded++
+				elementsFoundCoordinates = append(elementsFoundCoordinates,
+					[]int{indexRow, indexColumn}, []int{indexRow + 1, indexColumn},
+					[]int{indexRow + 2, indexColumn}, []int{indexRow + 3, indexColumn})
+				sequencesFound++
 				continue
 			}
 		}
 	}
 
-	return sequencesFounded
+	return sequencesFound
 }
 
-func CheckForDiagonalSequence(matrix [][]bool, actualRow, actualColumn int) bool {
+func CheckForDiagonalSequence(matrix [][]bool, actualRow, actualColumn int) (bool, int) {
 	countLetter := 0
 	maxRows, maxColumns := GetMatrixSize(matrix)
 
@@ -52,7 +69,7 @@ func CheckForDiagonalSequence(matrix [][]bool, actualRow, actualColumn int) bool
 			break
 		}
 		if countLetter == 4 {
-			return true
+			return true, +1
 		}
 		row++
 		column++
@@ -68,12 +85,12 @@ func CheckForDiagonalSequence(matrix [][]bool, actualRow, actualColumn int) bool
 			break
 		}
 		if countLetter == 4 {
-			return true
+			return true, -1
 		}
 		row++
 		column--
 	}
-	return false
+	return false, 0
 }
 
 func CheckForLineSequence(matrix [][]bool, actualRow, actualColumn int) bool {
@@ -117,4 +134,13 @@ func GetMatrixSize(matrix [][]bool) (int, int) {
 		maxColumns = 0
 	}
 	return maxRows, maxColumns
+}
+
+func CheckIfElementAlreadyValidated(elementsFound [][]int, actualRow, actualColumn int) bool {
+	for _, coordinates := range elementsFound {
+		if coordinates[0] == actualRow && coordinates[1] == actualColumn {
+			return true
+		}
+	}
+	return false
 }

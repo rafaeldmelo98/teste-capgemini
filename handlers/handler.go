@@ -29,15 +29,15 @@ func (handler *Handler) CheckSequence(c echo.Context) error {
 	matrixD := services.MapSequence("D", sequence.SequenceList)
 	matrixH := services.MapSequence("H", sequence.SequenceList)
 
-	foundedSequenceB := services.FindValidSequence(matrixB)
-	foundedSequenceU := services.FindValidSequence(matrixU)
-	foundedSequenceD := services.FindValidSequence(matrixD)
-	foundedSequenceH := services.FindValidSequence(matrixH)
+	foundSequenceB := services.FindValidSequence(matrixB)
+	foundSequenceU := services.FindValidSequence(matrixU)
+	foundSequenceD := services.FindValidSequence(matrixD)
+	foundSequenceH := services.FindValidSequence(matrixH)
 
 	rowsMatrix, columnsMatrix := services.GetMatrixSize(matrixB)
 	quantityElementsMatrix := rowsMatrix * columnsMatrix
-	quantitySequenceFounded := foundedSequenceB + foundedSequenceU + foundedSequenceD +
-		foundedSequenceH
+	quantitySequenceFounded := foundSequenceB + foundSequenceU + foundSequenceD +
+		foundSequenceH
 	numberElementsValid := quantitySequenceFounded * 4
 	numberElementsInvalid := quantityElementsMatrix - numberElementsValid
 	rateNumberElementValid := float64(numberElementsValid) / float64(quantityElementsMatrix)
