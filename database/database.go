@@ -7,10 +7,10 @@ import (
 	"os"
 )
 
-func SetUpDatabase() {
+func SetUpDatabase() bool {
 	_, err := os.Stat("sqlite-database.db")
 	if !errors.Is(err, os.ErrNotExist) {
-		return
+		return false
 	}
 
 	file, err := os.Create("sqlite-database.db")
@@ -40,4 +40,6 @@ func SetUpDatabase() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+
+	return true
 }

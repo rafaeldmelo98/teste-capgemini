@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
+	"teste-capgemini/database"
 	"teste-capgemini/handlers"
 	"teste-capgemini/models"
 	"teste-capgemini/services"
@@ -16,8 +17,9 @@ import (
 )
 
 var (
-	db, _   = sql.Open("sqlite3", "sqlite-database.db")
-	handler = handlers.Handler{
+	setupDone = database.SetUpDatabase()
+	db, _     = sql.Open("sqlite3", "sqlite-database.db")
+	handler   = handlers.Handler{
 		DB: db,
 	}
 )
