@@ -73,5 +73,19 @@ func (handler *Handler) CheckSequence(c echo.Context) error {
 }
 
 func (handler *Handler) Stats(c echo.Context) error {
-	return nil
+	rowsSelected, err := handler.DB.Query("SELECT quantity_valid_sequence,quantity_invalid_sequence,rate_valid_sequence from sequences")
+	var tableResult []models.SequenceTable
+	var record models.SequenceTable
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, jsonObj{
+			"error":   "Error trying to select data",
+			"message": err.Error(),
+		})
+	}
+	defer rowsSelected.Close()
+	for rowsSelected.Next() {
+		rowsSelected.Scan(&record.QuantityValidSequence, &record.QuantityInvalidSequence, &record.RateValidSequence)
+		tableResult = append(tableResult, record)
+	}
+	return c.JSON(http.StatusOK, tableResult)
 }
