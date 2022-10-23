@@ -24,23 +24,22 @@ func CheckSequence(c echo.Context) error {
 	matrixD := services.MapSequence("D", sequence.SequenceList)
 	matrixH := services.MapSequence("H", sequence.SequenceList)
 
-	foundSequenceB := services.FindValidSequence(matrixB)
-	foundSequenceU := services.FindValidSequence(matrixU)
-	foundSequenceD := services.FindValidSequence(matrixD)
-	foundSequenceH := services.FindValidSequence(matrixH)
+	foundedSequenceB := services.FindValidSequence(matrixB)
+	foundedSequenceU := services.FindValidSequence(matrixU)
+	foundedSequenceD := services.FindValidSequence(matrixD)
+	foundedSequenceH := services.FindValidSequence(matrixH)
 
-	quantitySequenceFounded := foundSequenceB + foundSequenceU + foundSequenceD + foundSequenceH
+	quantitySequenceFounded := foundedSequenceB + foundedSequenceU + foundedSequenceD +
+		foundedSequenceH
 
 	if quantitySequenceFounded >= 2 {
 		return c.JSON(http.StatusOK, jsonObj{
-			"is_valid":          true,
-			"sequences_founded": quantitySequenceFounded,
+			"is_valid": true,
 		})
 	}
 
 	return c.JSON(http.StatusOK, jsonObj{
-		"is_valid":          false,
-		"sequences_founded": quantitySequenceFounded,
+		"is_valid": false,
 	})
 }
 
