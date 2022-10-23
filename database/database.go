@@ -26,7 +26,7 @@ func SetUpDatabase() {
 
 	query := `
 	CREATE TABLE IF NOT EXISTS sequences(
-		"id" integer PRIMARY KEY AUTOINCREMENT,
+		"id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
 		"quantity_valid_sequence" integer,
 		"quantity_invalid_sequence" integer,
 		"rate_valid_sequence" real
