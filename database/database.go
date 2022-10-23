@@ -18,7 +18,7 @@ func SetUpDatabase() {
 		log.Fatal(err.Error())
 	}
 	file.Close()
-	db, err := sql.Open("sqlite3", "../sqlite-database.db")
+	db, err := sql.Open("sqlite3", "sqlite-database.db")
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -26,13 +26,12 @@ func SetUpDatabase() {
 
 	query := `
 	CREATE TABLE IF NOT EXISTS sequences(
-		"id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+		"id" integer PRIMARY KEY AUTOINCREMENT,
 		"quantity_valid_sequence" integer,
 		"quantity_invalid_sequence" integer,
 		"rate_valid_sequence" real
 	);
 	`
-
 	statement, err := db.Prepare(query)
 	if err != nil {
 		log.Fatal(err.Error())

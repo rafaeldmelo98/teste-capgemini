@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"teste-capgemini/models"
 	"teste-capgemini/services"
@@ -20,7 +21,8 @@ func (handler *Handler) CheckSequence(c echo.Context) error {
 	err := c.Bind(&sequence)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, jsonObj{
-			"error": "Error trying to decode json",
+			"error":   "Error trying to decode json",
+			"message": err.Error(),
 		})
 	}
 
@@ -34,21 +36,34 @@ func (handler *Handler) CheckSequence(c echo.Context) error {
 	foundSequenceD := services.FindValidSequence(matrixD)
 	foundSequenceH := services.FindValidSequence(matrixH)
 
+	quantitySequenceFound := foundSequenceB + foundSequenceU + foundSequenceD +
+		foundSequenceH
 	rowsMatrix, columnsMatrix := services.GetMatrixSize(matrixB)
 	quantityElementsMatrix := rowsMatrix * columnsMatrix
-	quantitySequenceFounded := foundSequenceB + foundSequenceU + foundSequenceD +
-		foundSequenceH
-	numberElementsValid := quantitySequenceFounded * 4
+	numberElementsValid := quantitySequenceFound * 4
 	numberElementsInvalid := quantityElementsMatrix - numberElementsValid
 	rateNumberElementValid := float64(numberElementsValid) / float64(quantityElementsMatrix)
 
-	if quantitySequenceFounded >= 2 {
+	query := fmt.Sprintf(`INSERT INTO sequences(quantity_valid_sequence,quantity_invalid_sequence,rate_valid_sequence) VALUES(%d, %d,%.2f)`,
+		numberElementsValid, numberElementsInvalid, rateNumberElementValid)
+	statment, err := handler.DB.Prepare(query)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, jsonObj{
+			"error":   "There is a problem saving data",
+			"message": err.Error(),
+		})
+	}
+	_, err = statment.Exec()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, jsonObj{
+			"error":   "There is a problem saving data",
+			"message": err.Error(),
+		})
+	}
+
+	if quantitySequenceFound >= 2 {
 		return c.JSON(http.StatusOK, jsonObj{
-			"is_valid":  true,
-			"sequences": quantitySequenceFounded,
-			"n_valid":   numberElementsValid,
-			"n_invalid": numberElementsInvalid,
-			"rate":      rateNumberElementValid,
+			"is_valid": true,
 		})
 	}
 
