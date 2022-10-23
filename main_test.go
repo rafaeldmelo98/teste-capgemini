@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -11,6 +12,13 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
+)
+
+var (
+	db, _   = sql.Open("sqlite3", "sqlite-database.db")
+	handler = handlers.Handler{
+		DB: db,
+	}
 )
 
 func TestMapMatrixSequence(t *testing.T) {
@@ -44,8 +52,7 @@ func TestValidSequence(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
-	// Assertions
-	if assert.NoError(t, handlers.CheckSequence(c)) {
+	if assert.NoError(t, handler.CheckSequence(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 		assert.Equal(t, validResponse, rec.Body.String())
 	}
@@ -62,8 +69,7 @@ func TestInvalidSequence(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
-	// Assertions
-	if assert.NoError(t, handlers.CheckSequence(c)) {
+	if assert.NoError(t, handler.CheckSequence(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 		assert.Equal(t, validResponse, rec.Body.String())
 	}

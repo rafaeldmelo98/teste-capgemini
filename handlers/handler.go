@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"database/sql"
 	"net/http"
 	"teste-capgemini/models"
 	"teste-capgemini/services"
@@ -10,7 +11,11 @@ import (
 
 type jsonObj map[string]interface{}
 
-func CheckSequence(c echo.Context) error {
+type Handler struct {
+	DB *sql.DB
+}
+
+func (handler *Handler) CheckSequence(c echo.Context) error {
 	var sequence models.Sequence
 	err := c.Bind(&sequence)
 	if err != nil {
@@ -29,12 +34,21 @@ func CheckSequence(c echo.Context) error {
 	foundedSequenceD := services.FindValidSequence(matrixD)
 	foundedSequenceH := services.FindValidSequence(matrixH)
 
+	rowsMatrix, columnsMatrix := services.GetMatrixSize(matrixB)
+	quantityElementsMatrix := rowsMatrix * columnsMatrix
 	quantitySequenceFounded := foundedSequenceB + foundedSequenceU + foundedSequenceD +
 		foundedSequenceH
+	numberElementsValid := quantitySequenceFounded * 4
+	numberElementsInvalid := quantityElementsMatrix - numberElementsValid
+	rateNumberElementValid := float64(numberElementsValid) / float64(quantityElementsMatrix)
 
 	if quantitySequenceFounded >= 2 {
 		return c.JSON(http.StatusOK, jsonObj{
-			"is_valid": true,
+			"is_valid":  true,
+			"sequences": quantitySequenceFounded,
+			"n_valid":   numberElementsValid,
+			"n_invalid": numberElementsInvalid,
+			"rate":      rateNumberElementValid,
 		})
 	}
 
@@ -43,6 +57,6 @@ func CheckSequence(c echo.Context) error {
 	})
 }
 
-func Stats(c echo.Context) error {
+func (handler *Handler) Stats(c echo.Context) error {
 	return nil
 }
