@@ -42,15 +42,36 @@ func FindValidSequence(matrix [][]bool) int {
 func CheckForDiagonalSequence(matrix [][]bool, actualRow, actualColumn int) bool {
 	countLetter := 0
 	maxRows, maxColumns := GetMatrixSize(matrix)
-	for row := actualRow; row < maxRows; row++ {
-		for column := actualColumn; column < maxColumns; column++ {
-			if matrix[row][column] {
-				countLetter++
-			}
-			if countLetter == 4 {
-				return true
-			}
+
+	row := actualRow
+	column := actualColumn
+	for row < maxRows && column < maxColumns {
+		if matrix[row][column] {
+			countLetter++
+		} else {
+			break
 		}
+		if countLetter == 4 {
+			return true
+		}
+		row++
+		column++
+	}
+
+	countLetter = 0
+	row = actualRow
+	column = actualColumn
+	for row < maxRows && column >= 0 {
+		if matrix[row][column] {
+			countLetter++
+		} else {
+			break
+		}
+		if countLetter == 4 {
+			return true
+		}
+		row++
+		column--
 	}
 	return false
 }
@@ -61,6 +82,8 @@ func CheckForLineSequence(matrix [][]bool, actualRow, actualColumn int) bool {
 	for column := actualColumn; column < maxColumns; column++ {
 		if matrix[actualRow][column] {
 			countLetter++
+		} else {
+			break
 		}
 		if countLetter == 4 {
 			return true
@@ -72,9 +95,11 @@ func CheckForLineSequence(matrix [][]bool, actualRow, actualColumn int) bool {
 func CheckForColumnSequence(matrix [][]bool, actualRow, actualColumn int) bool {
 	countLetter := 0
 	maxRows, _ := GetMatrixSize(matrix)
-	for row := actualRow; row < maxRows; actualRow++ {
+	for row := actualRow; row < maxRows; row++ {
 		if matrix[row][actualColumn] {
 			countLetter++
+		} else {
+			break
 		}
 		if countLetter == 4 {
 			return true
