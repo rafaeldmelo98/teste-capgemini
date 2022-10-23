@@ -20,4 +20,5 @@
    * Realizado: Caso retornado que uma sequencia foi validada, salvar coordenadas de acordo com o tipo de sequencia encontrada.
 
 ## TODO
-* Criar .gitignore para remover arquivo do sqlite.
+* Criar .gitignore para remover arquivo do sqlite - FEITO
+* Documentar? Não solicitado.
