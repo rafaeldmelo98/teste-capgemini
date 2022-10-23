@@ -44,7 +44,7 @@ func (handler *Handler) CheckSequence(c echo.Context) error {
 	numberElementsInvalid := quantityElementsMatrix - numberElementsValid
 	rateNumberElementValid := float64(numberElementsValid) / float64(quantityElementsMatrix)
 
-	query := fmt.Sprintf(`INSERT INTO sequences(quantity_valid_sequence,quantity_invalid_sequence,rate_valid_sequence) VALUES(%d, %d,%.2f)`,
+	query := fmt.Sprintf(`INSERT INTO sequences(quantity_valid_sequence,quantity_invalid_sequence,rate_valid_sequence) VALUES(%d, %d,%.1f)`,
 		numberElementsValid, numberElementsInvalid, rateNumberElementValid)
 	statment, err := handler.DB.Prepare(query)
 	if err != nil {

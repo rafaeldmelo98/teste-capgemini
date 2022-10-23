@@ -101,7 +101,7 @@ func TestScanRoute(t *testing.T) {
 	if record.QuantityInvalidSequence != 24 {
 		t.Errorf("Select quantity invalid sequence error, want 24, got %d", record.QuantityValidSequence)
 	}
-	if record.RateValidSequence != 0.33 {
-		t.Errorf("Select rate valid sequence error, want 0.33, got %f", record.RateValidSequence)
+	if record.RateValidSequence != 0.3 {
+		t.Errorf("Select rate valid sequence error, want 0.3, got %f", record.RateValidSequence)
 	}
 }
