@@ -26,19 +26,16 @@ func (handler *Handler) CheckSequence(c echo.Context) error {
 		})
 	}
 
-	matrixB := services.MapSequence("B", sequence.SequenceList)
-	matrixU := services.MapSequence("U", sequence.SequenceList)
-	matrixD := services.MapSequence("D", sequence.SequenceList)
-	matrixH := services.MapSequence("H", sequence.SequenceList)
+	var matrix [][]bool
+	availableLetters := []string{"B", "U", "D", "H"}
+	quantitySequenceFound := 0
+	for _, letter := range availableLetters {
+		matrix = services.MapSequence(letter, sequence.SequenceList)
+		foundSequence := services.FindValidSequence(matrix)
+		quantitySequenceFound += foundSequence
+	}
 
-	foundSequenceB := services.FindValidSequence(matrixB)
-	foundSequenceU := services.FindValidSequence(matrixU)
-	foundSequenceD := services.FindValidSequence(matrixD)
-	foundSequenceH := services.FindValidSequence(matrixH)
-
-	quantitySequenceFound := foundSequenceB + foundSequenceU + foundSequenceD +
-		foundSequenceH
-	rowsMatrix, columnsMatrix := services.GetMatrixSize(matrixB)
+	rowsMatrix, columnsMatrix := services.GetMatrixSize(matrix)
 	quantityElementsMatrix := rowsMatrix * columnsMatrix
 	numberElementsValid := quantitySequenceFound * 4
 	numberElementsInvalid := quantityElementsMatrix - numberElementsValid
